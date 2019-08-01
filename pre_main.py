@@ -27,8 +27,8 @@ def parse_args():
     parser.add_argument('--beta2', type=float, default=0.999)
     parser.add_argument('--gpu_mode', type=bool, default=False)
     parser.add_argument('--benchmark_mode', type=bool, default=False)
-    # parser.add_argument('--threads', type=int, default=0,
-    #            help='number of threads for data loader to use, cpu_default=0, Gpu_default=8')
+    parser.add_argument('--threads', type=int, default=0,
+                help='number of threads for data loader to use, cpu_default=0, Gpu_default=8')
     return check_args(parser.parse_args())
 
 def check_args(args):
