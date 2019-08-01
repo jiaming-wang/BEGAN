@@ -266,6 +266,7 @@ class pre_GAN(object):
         image_frame_dim = int(np.sqrt(tot_num_samples))
 
         if fix:
+            self.sample_z_ = self.sample_z_.cuda()
             samples = self.G(self.sample_z_)
         else:
             sample_z_ = torch.rand((1, self.z_dim))
