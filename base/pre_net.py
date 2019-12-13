@@ -122,22 +122,22 @@ class pre_GAN(object):
         self.data_augmentation = False
         self.channel = 1
 
-        # train_set = gan_train(
-        #     self.dataset, 
-        #     self.input_size, 
-        #     self.data_augmentation
-        #     )
-        # self.data_loader = DataLoader(
-        #     dataset=train_set, 
-        #     num_workers=args.threads, 
-        #     batch_size=self.batch_size, 
-        #     shuffle=True,
-        #     drop_last=True
-        # ) 
-        transform = transforms.Compose([transforms.Resize((28, 28)), transforms.ToTensor(), transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))])
+        train_set = gan_train(
+            self.dataset, 
+            self.input_size, 
+            self.data_augmentation
+            )
         self.data_loader = DataLoader(
-            datasets.MNIST('data/mnist', train=True, download=True, transform=transform),
-            batch_size=64, shuffle=True)
+            dataset=train_set, 
+            num_workers=args.threads, 
+            batch_size=self.batch_size, 
+            shuffle=True,
+            drop_last=True
+        ) 
+        #transform = transforms.Compose([transforms.Resize((28, 28)), transforms.ToTensor(), transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))])
+        #self.data_loader = DataLoader(
+        #    datasets.MNIST('data/mnist', train=True, download=True, transform=transform),
+        #    batch_size=64, shuffle=True)
 
         self.G = pre_G(input_dim=self.z_dim, output_dim=self.channel, input_size=self.input_size)
         self.D = pre_D(input_dim=self.channel, output_dim=self.channel, input_size=self.input_size)
@@ -168,7 +168,7 @@ class pre_GAN(object):
             self.y_fake, self.y_real = self.y_fake.cuda(), self.y_real.cuda()
         
         self.D.train()
-        print('training strat!')
+        print('training start!')
         start_time = time.time()
         for epoch in range(self.epoch):
             self.G.train()
