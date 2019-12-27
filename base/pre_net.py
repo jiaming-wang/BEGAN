@@ -120,30 +120,34 @@ class pre_GAN(object):
         self.k = 0.0
         self.lr_lower_boundary = 0.00002
         self.data_augmentation = False
-        self.channel = 1
+        self.channel = 3
 
-        # train_set = gan_train(
-        #     self.dataset, 
-        #     self.input_size, 
-        #     self.data_augmentation
-        #     )
-        # self.data_loader = DataLoader(
-        #     dataset=train_set, 
-        #     num_workers=args.threads, 
-        #     batch_size=self.batch_size, 
-        #     shuffle=True,
-        #     drop_last=True
-        # ) 
-        transform = transforms.Compose([transforms.Resize((28, 28)), transforms.ToTensor(), transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))])
+        train_set = gan_train(
+            self.dataset, 
+            self.input_size, 
+            self.data_augmentation
+            )
         self.data_loader = DataLoader(
-            datasets.MNIST('data/mnist', train=True, download=True, transform=transform),
-            batch_size=64, shuffle=True)
+            dataset=train_set, 
+            num_workers=args.threads, 
+            batch_size=self.batch_size, 
+            shuffle=True,
+            drop_last=True
+        ) 
+        # transform = transforms.Compose([transforms.Resize((28, 28)), transforms.ToTensor(), transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))])
+        # self.data_loader = DataLoader(
+        #     datasets.MNIST('data/mnist', train=True, download=False, transform=transform),
+        #     batch_size=64, shuffle=True)
 
         self.G = pre_G(input_dim=self.z_dim, output_dim=self.channel, input_size=self.input_size)
         self.D = pre_D(input_dim=self.channel, output_dim=self.channel, input_size=self.input_size)
+        if args.pre_train:
+            print(1)
+            self.G.load_state_dict(torch.load(args.pre_modelG, map_location=lambda storage, loc: storage))
+            self.D.load_state_dict(torch.load(args.pre_modelD, map_location=lambda storage, loc: storage))
+
         self.G_optimizer = optim.Adam(self.G.parameters(), lr=0.0002, betas=(args.beta1, args.beta2))
         self.D_optimizer = optim.Adam(self.D.parameters(), lr=0.0002, betas=(args.beta1, args.beta2))
-        # print(self.G)
         self.sample_z_ = torch.rand((self.batch_size, self.z_dim)) #noise
 
         if self.gpu_mode:
@@ -177,7 +181,7 @@ class pre_GAN(object):
             # print(self.data_loader)
             # for iteration, batch in enumerate(self.data_loader, 1):
                 # if iteration == self.data_loader.dataset.__len__() // self.batch_size:
-                #     break
+                    # break
 
                 z_ = torch.rand((self.batch_size, self.z_dim))
                 # x_, name = Variable(batch[0]), batch[1]

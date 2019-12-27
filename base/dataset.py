@@ -17,7 +17,7 @@ import random
 from random import randrange
 
 def is_image_file(filename):
-    return any(filename.endswith(extension) for extension in [".png", ".jpg", ".jpeg"])
+    return any(filename.endswith(extension) for extension in [".png", ".jpg", ".jpeg", ".bmp"])
 
 def load_img(filepath):
     img = Image.open(filepath).convert('RGB')
