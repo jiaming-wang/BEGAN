@@ -134,10 +134,6 @@ class pre_GAN(object):
             shuffle=True,
             drop_last=True
         ) 
-        # transform = transforms.Compose([transforms.Resize((28, 28)), transforms.ToTensor(), transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))])
-        # self.data_loader = DataLoader(
-        #     datasets.MNIST('data/mnist', train=True, download=False, transform=transform),
-        #     batch_size=64, shuffle=True)
 
         self.G = pre_G(input_dim=self.z_dim, output_dim=self.channel, input_size=self.input_size)
         self.D = pre_D(input_dim=self.channel, output_dim=self.channel, input_size=self.input_size)
@@ -172,7 +168,7 @@ class pre_GAN(object):
             self.y_fake, self.y_real = self.y_fake.cuda(), self.y_real.cuda()
         
         self.D.train()
-        print('training strat!')
+        print('training start!')
         start_time = time.time()
         for epoch in range(self.epoch):
             self.G.train()
